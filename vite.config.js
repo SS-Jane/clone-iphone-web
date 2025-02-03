@@ -11,10 +11,10 @@ export default defineConfig({
       project: "javascript-react",
     }),
   ],
-  server: {
-    host: "192.168.1.100",
-    port: 3010,
-  },
+  // server: {
+  //   host: "192.168.1.100",
+  //   port: 3010,
+  // },
 
   build: {
     sourcemap: true,
