@@ -1,7 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
-import { hightlightsSlides } from "../constants";
-import { div } from "three/examples/jsm/nodes/Nodes.js";
 import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+gsap.registerPlugin(ScrollTrigger);
+
+import { hightlightsSlides } from "../constants";
+import { pauseImg, playImg, replayImg } from "../utils";
 
 const VideoCarousel = () => {
   const videoRef = useRef([]);
@@ -20,17 +24,44 @@ const VideoCarousel = () => {
 
   const { isEnd, isLastVideo, startPlay, videoId, isPlaying } = video;
 
+  useGSAP(() => {
+    gsap.to("#slider", {
+      transform: `translateX(${-100 * videoId}%)`,
+      duration: 2,
+      ease: "power2.inOut",
+    });
+
+    gsap.to("#video", {
+      scrollTrigger: {
+        trigger: "#video",
+        toggleActions: "restart none none none",
+      },
+      onComplete: () => {
+        setVideo((preVideo) => ({
+          ...preVideo,
+          startPlay: true,
+          isPlaying: true,
+        }));
+      },
+    });
+  }, [isEnd, videoId]);
+
   useEffect(() => {
     if (loadedData.length > 3) {
       if (!isPlaying) {
         videoRef.current[videoId].pause();
       } else {
-        startPlay && videoRef.current[videoId.play()];
+        startPlay && videoRef.current[videoId].play();
       }
     }
   }, [startPlay, videoId, isPlaying, loadedData]);
 
+  const handleLoadedMetadata = (i, e) => {
+    setLoadedData((pre) => [...pre, e]);
+  };
+
   useEffect(() => {
+    let currentProgress = 0;
     let span = videoSpanRef.current;
 
     if (span[videoId]) {
@@ -38,13 +69,89 @@ const VideoCarousel = () => {
       let anim = gsap.to(span[videoId], {
         onUpdate: () => {
           //do something when update
+          const progress = Math.ceil(anim.progress() * 100);
+          if (progress != currentProgress) {
+            currentProgress = progress;
+
+            gsap.to(videoDivRef.current[videoId], {
+              width:
+                window.innerWidth < 760
+                  ? "10vw"
+                  : window.innerWidth < 1200
+                  ? "10vw"
+                  : "4vw",
+            });
+
+            gsap.to(span[videoId], {
+              width: `${currentProgress}%`,
+              backgroundColor: "white",
+            });
+          }
         },
-        onComplete: () => [
+        onComplete: () => {
           //do something when complete
-        ],
+          if (isPlaying) {
+            gsap.to(videoDivRef.current[videoId], {
+              width: "12px",
+            });
+
+            gsap.to(span[videoId], {
+              backgroundColor: "#afafaf",
+            });
+          }
+        },
       });
+
+      if (videoId === 0) {
+        anim.restart();
+      }
+      const animUpdate = () => {
+        anim.progress(
+          videoRef.current[videoId].currentTime /
+            hightlightsSlides[videoId].videoDuration
+        );
+      };
+
+      if (isPlaying) {
+        gsap.ticker.add(animUpdate);
+      } else {
+        gsap.ticker.remove(animUpdate);
+      }
     }
   }, [videoId, startPlay]);
+
+  const handleProcess = (type, i) => {
+    switch (type) {
+      case "video-end":
+        setVideo((preVideo) => ({ ...preVideo, isEnd: true, videoId: i + 1 }));
+        break;
+      case "video-last":
+        setVideo((preVideo) => ({ ...preVideo, isLastVideo: true }));
+        break;
+      case "video-reset":
+        setVideo((preVideo) => ({
+          ...preVideo,
+          isLastVideo: false,
+          videoId: 0,
+        }));
+      case "play":
+        setVideo((preVideo) => ({
+          ...preVideo,
+          isPlaying: !preVideo.isPlaying,
+        }));
+        break;
+
+      case "pause":
+        setVideo((preVideo) => ({
+          ...preVideo,
+          isPlaying: !preVideo.isPlaying,
+        }));
+        break;
+
+      default:
+        return video;
+    }
+  };
 
   return (
     <>
@@ -58,13 +165,22 @@ const VideoCarousel = () => {
                   playsInline={true}
                   preload="auto"
                   muted
+                  className={`${
+                    list.id === 2 && 'translate-x-44'
+                  } pointer-events-none`}
                   ref={(el) => (videoRef.current[i] = el)}
+                  onEnded={() =>
+                    i !== 3
+                      ? handleProcess("video-end", i)
+                      : handleProcess("video-last")
+                  }
                   onPlay={() => {
                     setVideo((preVideo) => ({
                       ...preVideo,
                       isPlaying: true,
                     }));
                   }}
+                  onLoadedMetadata={(e) => handleLoadedMetadata(i, e)}
                 >
                   <source src={list.video} type="video/mp4" />
                 </video>
@@ -79,6 +195,36 @@ const VideoCarousel = () => {
             </div>
           </div>
         ))}
+      </div>
+
+      <div className="relatice flex-center mt-10">
+        <div className="flex-center py-5 px-7 bg-gray-300 backdrop-bur rounded-full">
+          {videoRef.current.map((_, i) => (
+            <span
+              key={i}
+              ref={(el) => (videoDivRef.current[i] = el)}
+              className="mx-2 w-3 h-3 bg-gray-200 rounded-full relative cursor-pointer"
+            >
+              <span
+                className="absolute h-full w-full rounded-full"
+                ref={(el) => (videoSpanRef.current[i] = el)}
+              />
+            </span>
+          ))}
+        </div>
+        <button className="control-btn">
+          <img
+            src={isLastVideo ? replayImg : !isPlaying ? playImg : pauseImg}
+            alt={isLastVideo ? "replay" : !isPlaying ? "play" : "pause"}
+            onClick={
+              isLastVideo
+                ? () => handleProcess("video-reset")
+                : !isPlaying
+                ? () => handleProcess("play")
+                : () => handleProcess("pause")
+            }
+          />
+        </button>
       </div>
     </>
   );
