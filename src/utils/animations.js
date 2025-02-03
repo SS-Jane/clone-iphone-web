@@ -16,6 +16,8 @@ export const animateWithGsap = (target, animationProps, scrollProps) => {
 }
 
 export const animateWithGsapTimeline = (timeline, rotationRef, rotationState, firstTarget, secondTarget, animationProps) => {
+  if (!rotationRef.current) return;
+
   timeline.to(rotationRef.current.rotation, {
     y: rotationState,
     duration: 1,
