@@ -2,6 +2,8 @@
 
 A **React + Three.js** project featuring a **3D iPhone model viewer** with smooth GSAP animations and interactive controls.
 
+[Clone iphone websit demo](https://clone-iphone-web.vercel.app)
+
 ## Table of Contents
 - [Overview](#overview)
 - [🎮 Features](#%F0%9F%8E%AE-features)
@@ -133,7 +135,14 @@ The `VideoCarousel` component handles the interactive video playback experience.
 - Handles video events such as `onEnded`, `onPlay`, and `onLoadedMetadata`.
 
 ## 🎥 Screenshots
-Add screenshots here showcasing the application in action.
+![Reference Immage](/public/assets/images/herossh.png)
+
+### Lighthouse score : Mobile 
+![Reference Immage](/public/assets/images/mobile_lighthouse_score.png)
+
+### Lighthouse score : Desktop
+![Reference Immage](/public/assets/images/desktop_lighthouse_score.png)
+
 
 
 ## 💌 License
