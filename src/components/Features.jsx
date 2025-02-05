@@ -69,7 +69,7 @@ const Features = () => {
             </h2>
           </div>
 
-          <div className="flex-center flex-col sm:px-10 space-y-10">
+          <div className="flex-center flex-col sm:px-10 space-y-4">
             <div className="relative h-[50vh] w-full flex items-center">
               <video
                 playsInline
@@ -82,34 +82,36 @@ const Features = () => {
                 <source src={exploreVideo} type="video/mp4" />
               </video>
             </div>
-            <div className="flex flex-col w-full relative space-y-10">
+            <div className="flex flex-col w-full relative md:flex-row space-x-4">
               <div className="feature-video-container">
                 <FeatureImage src={explore1Img} alt="titanium" />
               </div>
               <div className="feature-video-container">
                 <FeatureImage src={explore2Img} alt="titanium 2" />
               </div>
-          </div> 
+          </div>
           </div>
 
           
 
-          <div className="feature-text-container">
-            <FeatureText>
-              iPhone 15 Pro is{" "}
-              <span className="text-white">
-                the first iPhone to feature an aerospace-grade titanium design
-              </span>
-              , using the same alloy that spacecrafts use for missions to Mars.
-            </FeatureText>
+            <div className="feature-text-container">
+              <FeatureText>
+                iPhone 15 Pro is{" "}
+                <span className="text-white">
+                  the first iPhone to feature an aerospace-grade titanium design
+                </span>
+                , using the same alloy that spacecrafts use for missions to
+                Mars.
+              </FeatureText>
 
-            <FeatureText>
-              Titanium has one of the best strength-to-weight ratios of any
-              metal, making these our{" "}
-              <span className="text-white">lightest Pro models ever.</span>
-              You'll notice the difference every time you pick them up.
-            </FeatureText>
-          </div>
+              <FeatureText>
+                Titanium has one of the best strength-to-weight ratios of any
+                metal, making these our{" "}
+                <span className="text-white">lightest Pro models ever.</span>
+                You'll notice the difference every time you pick them up.
+              </FeatureText>
+            </div>
+          
         </div>
       </div>
     </section>
