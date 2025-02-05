@@ -135,13 +135,13 @@ The `VideoCarousel` component handles the interactive video playback experience.
 - Handles video events such as `onEnded`, `onPlay`, and `onLoadedMetadata`.
 
 ## 🎥 Screenshots
-![Reference Immage](/public/assets/images/herossh.png)
+![Reference Image](/public/assets/images/herossh.png)
 
 ### Lighthouse score : Mobile 
-![Reference Immage](/public/assets/images/mobile_lighthouse_score.png)
+![Reference Image](/public/assets/images/mobile_lighthouse_score.png)
 
 ### Lighthouse score : Desktop
-![Reference Immage](/public/assets/images/desktop_lighthouse_score.png)
+![Reference Image](/public/assets/images/desktop_lighthouse_score.png)
 
 
 
